@@ -1,2 +1,2 @@
 # ALBA-OSSR
-ALBA's Open Source Starstruck Robot
+ALBA's Open Source In the Zone Robot
