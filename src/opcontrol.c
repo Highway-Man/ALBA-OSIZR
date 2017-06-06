@@ -84,28 +84,36 @@ void operatorControl() {
 
 		//set intake motors
 		if(R1)
-			intakeSet(127);
+			clawSet(127);
 		else if(R2)
-			intakeSet(-127);
+			clawSet(-127);
 		else
-			intakeSet(0);
+			clawSet(10);
 
 		//set lift motors; apply holding power of 12
 		if(L1)
-			armSet(127);
+			chainbarSet(127);
 		else if(L2)
-			armSet(-127);
+			chainbarSet(-127);
 		else if(encoderGet(armEnc) > 300)
-			armSet(12);
+			chainbarSet(12);
 		else
-			armSet(0);
+			chainbarSet(0);
+
+		//set mobile goal lift motots
+		if(UP)
+			fourbarSet(127);
+		else if(DOWN)
+			fourbarSet(-127);
+		else
+			fourbarSet(15);
 
 		//auton practice without competition switch
 //		if(joystickGetDigital(1,8,JOY_UP))
 //			standardAuton();
 
 		//print encoder value to terminal
-		printf("%d, ", encoderGet(armEnc));
+//		printf("%d, ", encoderGet(armEnc));
 
 		delay(25);
 	}

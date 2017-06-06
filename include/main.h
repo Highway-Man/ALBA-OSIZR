@@ -158,6 +158,8 @@ typedef enum {
 #define R2	joystickGetDigital(1,6,JOY_DOWN)
 #define L1	joystickGetDigital(1,5,JOY_UP)
 #define L2	joystickGetDigital(1,5,JOY_DOWN)
+#define UP	joystickGetDigital(1,7, JOY_UP)
+#define DOWN joystickGetDigital(1,7,JOY_DOWN)
 
 //subsystem motor functions
 void lDriveSet(int control);
