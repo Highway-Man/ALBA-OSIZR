@@ -1,19 +1,19 @@
 /*
- * 	Copyright 2016 Jacob Knaup
+ * 	Copyright 2017 Jacob Knaup
  *
- * 	This file is part of the firmware for ALBA's Open Source Starstruck Robot and is built upon the PURDUE ROBOTICS OS (PROS).
+ * 	This file is part of the firmware for ALBA's Open Source In the Zone Robot and is built upon the PURDUE ROBOTICS OS (PROS).
  *
- * 	The firmware for ALBA's Open Source Starstruck Robot is free software: you can redistribute it and/or modify
+ * 	The firmware for ALBA's Open Source In the Zone Robot is free software: you can redistribute it and/or modify
  * 	it under the terms of the GNU General Public License as published by
  * 	the Free Software Foundation, either version 3 of the License, or
  * 	(at your option) any later version, while keeping with the terms of the license for PROS.
  *
- * 	The firmware for ALBA's Open Source Starstruck Robot is distributed in the hope that it will be useful,
+ * 	The firmware for ALBA's Open Source In the Zone Robot is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
  * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * 	GNU General Public License for more details.
  * 	You should have received a copy of the GNU General Public License
- * 	along with The firmware for ALBA's Open Source Starstruck Robot.  If not, see <http://www.gnu.org/licenses/>.
+ * 	along with The firmware for ALBA's Open Source In the Zone Robot.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -51,18 +51,7 @@ void waitForLift(int target){
 //deploy intake, raise lift & drive to fence, outtake
 //only a framework; will need to be adjusted on actual field
 void standardAuton(){
-	intakeSet(-127);
-	delay(500);
-	intakeSet(0);
-	driveSet(60,60);
-	armSet(127);
-	waitForLift(700);
-	armSet(12);
-	delay(200);
-	driveSet(0,0);
-	intakeSet(-127);
-	delay(3000);
-	intakeSet(0);
+
 }
 
 /**

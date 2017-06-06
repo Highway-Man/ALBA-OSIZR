@@ -1,19 +1,19 @@
 /*
- * 	Copyright 2016 Jacob Knaup
+ * 	Copyright 2016-2017 Jacob Knaup
  *
- * 	This file is part of the firmware for ALBA's Open Source Starstruck Robot and is built upon the PURDUE ROBOTICS OS (PROS).
+ * 	This file is part of the firmware for ALBA's Open Source In the Zone Robot and is built upon the PURDUE ROBOTICS OS (PROS).
  *
- * 	The firmware for ALBA's Open Source Starstruck Robot is free software: you can redistribute it and/or modify
+ * 	The firmware for ALBA's Open Source In the Zone Robot is free software: you can redistribute it and/or modify
  * 	it under the terms of the GNU General Public License as published by
  * 	the Free Software Foundation, either version 3 of the License, or
  * 	(at your option) any later version, while keeping with the terms of the license for PROS.
  *
- * 	The firmware for ALBA's Open Source Starstruck Robot is distributed in the hope that it will be useful,
+ * 	The firmware for ALBA's Open Source In the Zone Robot is distributed in the hope that it will be useful,
  * 	but WITHOUT ANY WARRANTY; without even the implied warranty of
  * 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * 	GNU General Public License for more details.
  * 	You should have received a copy of the GNU General Public License
- * 	along with The firmware for ALBA's Open Source Starstruck Robot.  If not, see <http://www.gnu.org/licenses/>.
+ * 	along with The firmware for ALBA's Open Source In the Zone Robot.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
 
@@ -45,15 +45,17 @@ void rDriveSet(int control){
 	motorSet(frDrive, -control);
 	motorSet(arDrive, control);
 }
-void armSet(int control){
+void chainbarSet(int control){
 	motorSet(tlArm, control);
 	motorSet(blArm, control);
 	motorSet(trArm, -control);
 	motorSet(brArm, -control);
 }
-void intakeSet(int control){
-	motorSet(lIntake, -control);
-	motorSet(rIntake, control);
+void clawSet(int control){
+	motorSet(claw, -control);
+}
+void fourbarSet(int control){
+	motorSet(fourbar, control);
 }
 
 /**
