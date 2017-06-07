@@ -137,16 +137,16 @@ extern Encoder armEnc;
 
 //Motor Port Enumeration (eg port1: aft left Drive)
 typedef enum {
-	alDrive = 1,
-	flDrive,
+	ilArm = 1,
 	olArm,
-	ilArm,
+	alDrive,
+	flDrive,
 	fourbar,
 	claw,
-	irArm,
-	orArm,
 	frDrive,
 	arDrive,
+	orArm,
+	irArm,
 
 	MOTORNum
 } MOTOR;

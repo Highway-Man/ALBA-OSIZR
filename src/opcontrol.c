@@ -117,12 +117,19 @@ void operatorControl() {
 			chainbarSet(0);
 
 		//set mobile goal lift motots
-		if(UP)
+		static int fourbarLast;
+		if(UP){
 			fourbarSet(127);
-		else if(DOWN)
+			fourbarLast = 127;
+		}
+		else if(DOWN){
 			fourbarSet(-127);
-		else
+			fourbarLast = -127;
+		}
+		else if(fourbarLast > 0)
 			fourbarSet(15);
+		else
+			fourbarSet(0);
 
 		//auton practice without competition switch
 //		if(joystickGetDigital(1,8,JOY_UP))
