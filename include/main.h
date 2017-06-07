@@ -139,12 +139,12 @@ extern Encoder armEnc;
 typedef enum {
 	alDrive = 1,
 	flDrive,
-	tlArm,
-	blArm,
+	olArm,
+	ilArm,
 	fourbar,
 	claw,
-	brArm,
-	trArm,
+	irArm,
+	orArm,
 	frDrive,
 	arDrive,
 

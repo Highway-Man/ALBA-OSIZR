@@ -46,13 +46,30 @@ void rDriveSet(int control){
 	motorSet(arDrive, control);
 }
 void chainbarSet(int control){
-	motorSet(tlArm, control);
-	motorSet(blArm, control);
-	motorSet(trArm, -control);
-	motorSet(brArm, -control);
+	motorSet(olArm, control);
+	motorSet(ilArm, -control);
+	motorSet(orArm, -control);
+	motorSet(irArm, control);
 }
 void clawSet(int control){
-	motorSet(claw, -control);
+	motorSet(claw, control);
+}
+int clawPosition = 0;
+void closeClaw(int close){
+	static int time = 0;
+	static int last = 1;
+	if(close != last)
+		time = 0;
+	if(close && time < 200)
+		clawSet(127);
+	else if(close)
+		clawSet(12);
+	else if(time < 200)
+		clawSet(-127);
+	else
+		clawSet(-12);
+	time += 25;
+	last = close;
 }
 void fourbarSet(int control){
 	motorSet(fourbar, control);
@@ -84,17 +101,16 @@ void operatorControl() {
 
 		//set intake motors
 		if(R1)
-			clawSet(127);
+			clawPosition = 1;
 		else if(R2)
-			clawSet(-127);
-		else
-			clawSet(10);
+			clawPosition = 0;
+		closeClaw(clawPosition);
 
 		//set lift motors; apply holding power of 12
 		if(L1)
-			chainbarSet(127);
+			chainbarSet(60);
 		else if(L2)
-			chainbarSet(-127);
+			chainbarSet(-60);
 		else if(encoderGet(armEnc) > 300)
 			chainbarSet(12);
 		else
