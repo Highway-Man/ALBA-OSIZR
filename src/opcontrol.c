@@ -52,14 +52,14 @@ void chainbarSet(int control){
 	motorSet(irArm, control);
 }
 void chainbarControl(int target){
-	static int last, command;
+	static int last, command, deltaMax = 15;
 	last = motorGet(olArm);
-	if(target > last)
-		command = last + 5;
-	else if(target < last)
-		command = last - 5;
+	if(target-last > deltaMax)
+		command = last + deltaMax;
+	else if(target-last < -deltaMax)
+		command = last - deltaMax;
 	else
-		command = last;
+		command = target;
 	chainbarSet(command);
 }
 void clawSet(int control){
@@ -98,6 +98,8 @@ void fourbarSet(int control){
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
+
+	//autonomous();
 	while (true)
 	{
 		//set drive motors with a deadband of 5
@@ -150,7 +152,7 @@ void operatorControl() {
 //			standardAuton();
 
 		//print encoder value to terminal
-//		printf("%d, ", encoderGet(armEnc));
+		printf("%d, ", encoderGet(armEnc));
 
 		delay(25);
 	}

@@ -167,6 +167,7 @@ void rDriveSet(int control);
 void chainbarSet(int control);
 void fourbarSet(int control);
 void clawSet(int control);
+void chainbarControl(int target);
 
 //auton routines
 void standardAuton(void);

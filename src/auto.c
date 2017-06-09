@@ -47,11 +47,34 @@ void waitForLift(int target){
 	while(abs(encoderGet(armEnc) - target) > 10)
 		delay(25);
 }
+void liftPID(int target){
+	static int error, pos, P;
+	static float kP = .4;
+	int g = 5;
+	pos = encoderGet(armEnc);
+	error = target - pos;
+	P = error*kP;
+	if(abs(P) > 110)
+		P = 110*P/abs(P);
+	if(pos > 400);
+		g = -g;
+	chainbarControl(P+g);
+}
 
 //deploy intake, raise lift & drive to fence, outtake
 //only a framework; will need to be adjusted on actual field
 void standardAuton(){
-
+	while(encoderGet(armEnc) < 400){
+		liftPID(400);
+	}
+	while(encoderGet(armEnc) > 80){
+		liftPID(80);
+	}
+	while(encoderGet(armEnc) < 800)
+		liftPID(800);
+	while(encoderGet(armEnc) > 80){
+			liftPID(80);
+	}
 }
 
 /**
