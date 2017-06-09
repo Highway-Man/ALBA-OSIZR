@@ -51,6 +51,17 @@ void chainbarSet(int control){
 	motorSet(orArm, -control);
 	motorSet(irArm, control);
 }
+void chainbarControl(int target){
+	static int last, command;
+	last = motorGet(olArm);
+	if(target > last)
+		command = last + 5;
+	else if(target < last)
+		command = last - 5;
+	else
+		command = last;
+	chainbarSet(command);
+}
 void clawSet(int control){
 	motorSet(claw, control);
 }
@@ -64,10 +75,10 @@ void closeClaw(int close){
 		clawSet(127);
 	else if(close)
 		clawSet(12);
-	else if(time < 200)
+	else if(time < 50)
 		clawSet(-127);
 	else
-		clawSet(-12);
+		clawSet(0);
 	time += 25;
 	last = close;
 }
@@ -106,15 +117,18 @@ void operatorControl() {
 			clawPosition = 0;
 		closeClaw(clawPosition);
 
+		static int chainbarLast = 0;
 		//set lift motors; apply holding power of 12
-		if(L1)
-			chainbarSet(60);
-		else if(L2)
-			chainbarSet(-60);
-		else if(encoderGet(armEnc) > 300)
-			chainbarSet(12);
+		if(L1){
+			chainbarControl(80);
+			chainbarLast = 1;
+		}
+		else if(L2){
+			chainbarControl(-80);
+			chainbarLast = -1;
+		}
 		else
-			chainbarSet(0);
+			chainbarControl(-0*chainbarLast);
 
 		//set mobile goal lift motots
 		static int fourbarLast;
