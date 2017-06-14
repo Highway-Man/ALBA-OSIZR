@@ -133,6 +133,7 @@ void initialize();
  */
 void operatorControl(); 
  
+#define encRead	encoderGet(armEnc)
 extern Encoder armEnc;
 
 //Motor Port Enumeration (eg port1: aft left Drive)
@@ -160,6 +161,9 @@ typedef enum {
 #define L2	joystickGetDigital(1,5,JOY_DOWN)
 #define UP	joystickGetDigital(1,7, JOY_UP)
 #define DOWN joystickGetDigital(1,7,JOY_DOWN)
+#define	LEFT	joystickGetDigital(1,7,JOY_LEFT)
+#define RIGHT	joystickGetDigital(1,7,JOY_RIGHT)
+#define X	joystickGetDigital(1,8,JOY_DOWN)
 
 //subsystem motor functions
 void lDriveSet(int control);

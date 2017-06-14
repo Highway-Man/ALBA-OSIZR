@@ -52,7 +52,7 @@ void chainbarSet(int control){
 	motorSet(irArm, control);
 }
 void chainbarControl(int target){
-	static int last, command, deltaMax = 15;
+	static int last, command, deltaMax = 10;
 	last = motorGet(olArm);
 	if(target-last > deltaMax)
 		command = last + deltaMax;
@@ -75,15 +75,23 @@ void closeClaw(int close){
 		clawSet(127);
 	else if(close)
 		clawSet(12);
-	else if(time < 50)
+	else if(time < 100)
 		clawSet(-127);
 	else
-		clawSet(0);
+		clawSet(-10);
 	time += 25;
 	last = close;
 }
 void fourbarSet(int control){
 	motorSet(fourbar, control);
+}
+
+void prepChainbar(){
+	chainbarSet(-50);
+	delay(300);
+	chainbarSet(-10);
+	delay(50);
+	encoderReset(armEnc);
 }
 
 /**
@@ -98,7 +106,7 @@ void fourbarSet(int control){
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
-
+	//prepChainbar();
 	//autonomous();
 	while (true)
 	{
@@ -122,13 +130,15 @@ void operatorControl() {
 		static int chainbarLast = 0;
 		//set lift motors; apply holding power of 12
 		if(L1){
-			chainbarControl(80);
+			chainbarControl(100);
 			chainbarLast = 1;
 		}
 		else if(L2){
-			chainbarControl(-80);
+			chainbarControl(-100);
 			chainbarLast = -1;
 		}
+		else if(encoderGet(armEnc) < 100)
+			chainbarControl(-12);
 		else
 			chainbarControl(-0*chainbarLast);
 
@@ -146,6 +156,9 @@ void operatorControl() {
 			fourbarSet(15);
 		else
 			fourbarSet(0);
+
+		if(X)
+			encoderReset(armEnc);
 
 		//auton practice without competition switch
 //		if(joystickGetDigital(1,8,JOY_UP))

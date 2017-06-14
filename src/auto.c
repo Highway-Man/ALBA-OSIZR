@@ -43,9 +43,9 @@ void driveSet(int left, int right){
 }
 
 //wait for lift to be within 10 ticks of target
-void waitForLift(int target){
-	while(abs(encoderGet(armEnc) - target) > 10)
-		delay(25);
+void waitForLift(int target, int margin){
+	while(abs(encoderGet(armEnc) - target) > margin)
+		delay(20);
 }
 void liftPID(int target){
 	static int error, pos, P;
@@ -61,20 +61,52 @@ void liftPID(int target){
 	chainbarControl(P+g);
 }
 
+int gTarget;
+void liftTask(void * parameter){
+	while(1){
+		liftPID(gTarget);
+		delay(25);
+	}
+}
+
+void moveLift(int target, int margin){
+	gTarget = target;
+	waitForLift(target, margin);
+}
+
+void moveClaw(int close){
+	if(close){
+		clawSet(127);
+		delay(200);
+		clawSet(12);
+	}
+	else{
+		clawSet(-127);
+		delay(50);
+		clawSet(0);
+	}
+}
+//890, 850, 810, 785, 765, 750, 733, 670,
+
 //deploy intake, raise lift & drive to fence, outtake
 //only a framework; will need to be adjusted on actual field
 void standardAuton(){
-	while(encoderGet(armEnc) < 400){
-		liftPID(400);
-	}
-	while(encoderGet(armEnc) > 80){
-		liftPID(80);
-	}
-	while(encoderGet(armEnc) < 800)
-		liftPID(800);
-	while(encoderGet(armEnc) > 80){
-			liftPID(80);
-	}
+	moveLift(400, 20);
+	moveClaw(0);
+	delay(1000);
+	moveLift(220, 10);
+	moveClaw(1);
+	moveLift(880, 10);
+	moveClaw(0);
+	moveLift(220, 10);
+	moveClaw(1);
+	moveLift(840, 10);
+	moveClaw(0);
+	moveLift(220, 10);
+	moveClaw(1);
+	moveLift(800, 10);
+	moveClaw(0);
+	moveLift(220, 0);
 }
 
 /**
@@ -87,5 +119,11 @@ void standardAuton(){
 * The autonomous task may exit, unlike operatorControl() which should never exit. If it does so, the robot will await a switch to another mode or disable/enable cycle.
 */
 void autonomous() {
+	chainbarSet(-50);
+	delay(300);
+	chainbarSet(-10);
+	encoderReset(armEnc);
+	gTarget = 0;
+	taskCreate(liftTask, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
 	standardAuton();
 }

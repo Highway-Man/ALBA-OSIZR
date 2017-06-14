@@ -59,6 +59,5 @@ void initializeIO() {
 Encoder armEnc;
 
  void initialize() { 
-armEnc = encoderInit(1,2,false);
-
+	 armEnc = encoderInit(1,2,false);
 }
