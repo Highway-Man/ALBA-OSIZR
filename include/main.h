@@ -173,6 +173,17 @@ void fourbarSet(int control);
 void clawSet(int control);
 void chainbarControl(int target);
 
+extern int gTarget;
+void liftTask(void * parameter);
+
+typedef struct{
+	long error, derivative, P, target, pos;
+	short height;
+	float kP;
+}PID;
+PID arm;
+void positionController(void);
+
 //auton routines
 void standardAuton(void);
 

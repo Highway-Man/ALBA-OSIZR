@@ -37,61 +37,88 @@
 #include "main.h"
 
 //functions to set our subsystem motors to control values. Some motors need to be reversed
-void lDriveSet(int control){
+void lDriveSet(int control) {
 	motorSet(flDrive, control);
 	motorSet(alDrive, -control);
 }
-void rDriveSet(int control){
+void rDriveSet(int control) {
 	motorSet(frDrive, -control);
 	motorSet(arDrive, control);
 }
-void chainbarSet(int control){
+void chainbarSet(int control) {
 	motorSet(olArm, control);
 	motorSet(ilArm, -control);
 	motorSet(orArm, -control);
 	motorSet(irArm, control);
 }
-void chainbarControl(int target){
+void chainbarControl(int target) {
 	static int last, command, deltaMax = 10;
 	last = motorGet(olArm);
-	if(target-last > deltaMax)
+	if (target - last > deltaMax)
 		command = last + deltaMax;
-	else if(target-last < -deltaMax)
+	else if (target - last < -deltaMax)
 		command = last - deltaMax;
 	else
 		command = target;
 	chainbarSet(command);
 }
-void clawSet(int control){
+void clawSet(int control) {
 	motorSet(claw, control);
 }
 int clawPosition = 0;
-void closeClaw(int close){
+void closeClaw(int close) {
 	static int time = 0;
 	static int last = 1;
-	if(close != last)
+	if (close != last)
 		time = 0;
-	if(close && time < 200)
+	if (close && time < 200)
 		clawSet(127);
-	else if(close)
+	else if (close)
 		clawSet(12);
-	else if(time < 100)
+	else if (time < 100)
 		clawSet(-127);
 	else
 		clawSet(-10);
 	time += 25;
 	last = close;
 }
-void fourbarSet(int control){
+void fourbarSet(int control) {
 	motorSet(fourbar, control);
 }
 
-void prepChainbar(){
+void prepChainbar() {
 	chainbarSet(-50);
 	delay(300);
 	chainbarSet(-10);
 	delay(50);
 	encoderReset(armEnc);
+}
+
+void updateArmTarget() {
+	if (arm.height == 0)
+		arm.target = -60;
+	else if (arm.height == 1)
+		arm.target = 840;
+	else if (arm.height == 2)
+		arm.target = 800;
+	else if (arm.height == 3)
+		arm.target = 775;
+	else if (arm.height == 4)
+		arm.target = 755;
+	else if (arm.height == 5)
+		arm.target = 740;
+	else if (arm.height == 6)
+		arm.target = 720;
+	else if (arm.height == 7)
+		arm.target = 670;
+}
+
+void checkStackRelease() {
+	//890, 850, 810, 785, 765, 750, 733, 670,
+	if (arm.error < 10 && arm.target > 0) {
+		clawPosition = 0;
+		arm.target = -50;
+	}
 }
 
 /**
@@ -106,58 +133,70 @@ void prepChainbar(){
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
 void operatorControl() {
+	arm.height=0;
+	updateArmTarget();
 	//prepChainbar();
 	//autonomous();
-	while (true)
-	{
+	while (true) {
 		//set drive motors with a deadband of 5
-		if(abs(L_JOY) > 5)
+		if (abs(L_JOY) > 5)
 			lDriveSet(L_JOY);
 		else
 			lDriveSet(0);
-		if(abs(R_JOY) > 5)
+		if (abs(R_JOY) > 5)
 			rDriveSet(R_JOY);
 		else
 			rDriveSet(0);
 
 		//set intake motors
-		if(R1)
+		if (R1)
 			clawPosition = 1;
-		else if(R2)
+		else if (R2)
 			clawPosition = 0;
 		closeClaw(clawPosition);
 
-		static int chainbarLast = 0;
-		//set lift motors; apply holding power of 12
-		if(L1){
-			chainbarControl(100);
-			chainbarLast = 1;
-		}
-		else if(L2){
-			chainbarControl(-100);
-			chainbarLast = -1;
-		}
-		else if(encoderGet(armEnc) < 100)
-			chainbarControl(-12);
-		else
-			chainbarControl(-0*chainbarLast);
+		/*static int chainbarLast = 0;
+		 //set lift motors; apply holding power of 12
+		 if(L1){
+		 chainbarControl(100);
+		 chainbarLast = 1;
+		 }
+		 else if(L2){
+		 chainbarControl(-100);
+		 chainbarLast = -1;
+		 }
+		 else if(encoderGet(armEnc) < 100)
+		 chainbarControl(-12);
+		 else
+		 chainbarControl(-0*chainbarLast);*/
+
+		static short debounce = 0;
+		if (LEFT && debounce != -1) {
+			updateArmTarget();
+			debounce = -1;
+		} else if (RIGHT && debounce != 1) {
+			arm.height++;
+			updateArmTarget();
+			debounce = 1;
+		} else if(!LEFT && !RIGHT)
+			debounce = 0;
+		positionController();
+		checkStackRelease();
 
 		//set mobile goal lift motots
 		static int fourbarLast;
-		if(UP){
+		if (UP) {
 			fourbarSet(127);
 			fourbarLast = 127;
-		}
-		else if(DOWN){
+		} else if (DOWN) {
 			fourbarSet(-127);
 			fourbarLast = -127;
-		}
-		else if(fourbarLast > 0)
+		} else if (fourbarLast > 0)
 			fourbarSet(15);
 		else
 			fourbarSet(0);
 
-		if(X)
+		if (X)
 			encoderReset(armEnc);
 
 		//auton practice without competition switch

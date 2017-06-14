@@ -47,24 +47,20 @@ void waitForLift(int target, int margin){
 	while(abs(encoderGet(armEnc) - target) > margin)
 		delay(20);
 }
-void liftPID(int target){
-	static int error, pos, P;
-	static float kP = .4;
-	int g = 5;
-	pos = encoderGet(armEnc);
-	error = target - pos;
-	P = error*kP;
-	if(abs(P) > 110)
-		P = 110*P/abs(P);
-	if(pos > 400);
-		g = -g;
-	chainbarControl(P+g);
-}
 
+void positionController(){
+	arm.kP = .4;
+	arm.pos = encoderGet(armEnc);
+	arm.error = arm.target - arm.pos;
+	arm.P = arm.error*arm.kP;
+	if(abs(arm.P) > 100)
+		arm.P = 110*arm.P/abs(arm.P);
+	chainbarControl(arm.P);
+}
 int gTarget;
 void liftTask(void * parameter){
 	while(1){
-		liftPID(gTarget);
+		positionController();
 		delay(25);
 	}
 }
