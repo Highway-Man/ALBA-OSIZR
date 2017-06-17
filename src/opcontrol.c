@@ -74,8 +74,8 @@ void closeClaw(int close) {
 	if (close && time < 200)
 		clawSet(127);
 	else if (close)
-		clawSet(12);
-	else if (time < 100)
+		clawSet(15);
+	else if (time < 150)
 		clawSet(-127);
 	else
 		clawSet(-10);
@@ -104,13 +104,13 @@ void updateArmTarget() {
 	else if (arm.height == 3)
 		arm.target = 775;
 	else if (arm.height == 4)
-		arm.target = 755;
+		arm.target = 745;
 	else if (arm.height == 5)
-		arm.target = 740;
+		arm.target = 700;
 	else if (arm.height == 6)
-		arm.target = 720;
+		arm.target = 640;
 	else if (arm.height == 7)
-		arm.target = 670;
+		arm.target = 600;
 }
 
 void checkStackRelease() {
@@ -155,7 +155,7 @@ void operatorControl() {
 			clawPosition = 0;
 		closeClaw(clawPosition);
 
-		/*static int chainbarLast = 0;
+		static int chainbarLast = 0;
 		 //set lift motors; apply holding power of 12
 		 if(L1){
 		 chainbarControl(100);
@@ -168,20 +168,29 @@ void operatorControl() {
 		 else if(encoderGet(armEnc) < 100)
 		 chainbarControl(-12);
 		 else
-		 chainbarControl(-0*chainbarLast);*/
+		 chainbarControl(-0*chainbarLast);
 
-		static short debounce = 0;
-		if (LEFT && debounce != -1) {
+		/*static short debounce = 0;
+		if (L2 && debounce != -1) {
 			updateArmTarget();
 			debounce = -1;
-		} else if (RIGHT && debounce != 1) {
+		} else if (L1 && debounce != 1) {
 			arm.height++;
 			updateArmTarget();
 			debounce = 1;
-		} else if(!LEFT && !RIGHT)
+		}else if(LEFT && debounce != -2){
+			arm.height--;
+			updateArmTarget();
+			debounce = -2;
+		}
+		else if(RIGHT){
+			arm.height = 0;
+			updateArmTarget();
+		}
+		else if(!L1 && !L2 && !LEFT)
 			debounce = 0;
 		positionController();
-		checkStackRelease();
+		checkStackRelease();*/
 
 		//set mobile goal lift motots
 		static int fourbarLast;
